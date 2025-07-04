@@ -12,11 +12,14 @@ const loanRoutes = require('./routes/loans');
 const transactionRoutes = require('./routes/transactions');
 const queryRoutes = require('./routes/queries');
 const adminRoutes = require('./routes/admin');
+const employeeRoutes = require('./routes/employee.js');
 
 const app = express(); 
 
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // ✅ Root route added for Render testing
 app.get('/', (req, res) => {
@@ -65,6 +68,7 @@ app.use('/api/loans', loanRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/queries', queryRoutes);
 app.use('/api', adminRoutes);
+app.use('/api', employeeRoutes);
 
 // ✅ Server start (Render-compatible)
 const PORT = process.env.PORT || 5000;
