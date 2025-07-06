@@ -13,7 +13,8 @@ const transactionRoutes = require('./routes/transactions');
 const queryRoutes = require('./routes/queries');
 const adminRoutes = require('./routes/admin');
 const employeeRoutes = require('./routes/employee.js');
-const uploadRoutes = require('./routes/uploadRoutes.js')
+const businessRoutes = require('./routes/business.js');
+const uploadRoutes = require('./routes/uploadRoutes.js');
 
 const app = express(); 
 
@@ -70,6 +71,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/queries', queryRoutes);
 app.use('/api', adminRoutes);
 app.use('/api', employeeRoutes);
+app.use('/api', businessRoutes);
 app.use('/api', uploadRoutes); 
 
 // ✅ Server start (Render-compatible)
