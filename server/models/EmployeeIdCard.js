@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const employeeIdCardSchema = new mongoose.Schema({
+    profilePhoto: {
+    type: String,
+    default: '',
+    },
     name: {
         type: String,
         required: true,
