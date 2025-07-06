@@ -72,11 +72,11 @@ router.post('/verify-otp', async (req, res) => {
 
 // Register
 router.post('/register', async (req, res) => {
-  const { name, email, password, role, address, pincode, mobileNumber, otp, extraSelection } = req.body;
+  const { name, email, password, role, subRole, address, pincode, mobileNumber, otp, extraSelection } = req.body;
   if (role === 'admin') {
     return res.status(403).json({ message: 'Registration as admin is not allowed' });
   }
-  if (!name || !email || !password || !role || !address || !pincode || !mobileNumber || !otp) {
+  if (!name || !email || !password || !role || !subRole || !address || !pincode || !mobileNumber || !otp) {
     return res.status(400).json({ message: 'All fields including OTP are required' });
   }
   try {
@@ -89,13 +89,10 @@ router.post('/register', async (req, res) => {
     if (record.otp !== otp) return res.status(400).json({ message: 'Invalid OTP' });
     await OTP.deleteOne({ email });
     const hashedPassword = await bcrypt.hash(password, 10);
-    const userData = { name, email, password: hashedPassword, role, address, pincode, mobileNumber };
-    if (role === 'business' && extraSelection) {
-      userData.businessCategory = extraSelection;
-    }
+    const userData = { name, email, password: hashedPassword, role, subRole, address, pincode, mobileNumber };
     const user = new User(userData);
     const savedUser = await user.save();
-    const token = jwt.sign({ id: savedUser._id, role: savedUser.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: savedUser._id, role: savedUser.role, subRole:savedUser.subRole }, process.env.JWT_SECRET, { expiresIn: '1d' });
     res.status(201).json({
       token,
       user: {
@@ -103,16 +100,20 @@ router.post('/register', async (req, res) => {
         name: savedUser.name,
         email: savedUser.email,
         role: savedUser.role,
+        subRole: savedUser.subRole,
         address: savedUser.address,
         pincode: savedUser.pincode,
         mobileNumber: savedUser.mobileNumber,
-        businessCategory: savedUser.businessCategory || null
       }
     });
   } catch (error) {
-    console.error('Error saving user:', error);
-    res.status(400).json({ message: 'Error registering user', error: error.message });
+  console.error('Error saving user:', error);
+  if (error.name === 'ValidationError') {
+    const messages = Object.values(error.errors).map(val => val.message);
+    return res.status(400).json({ message: 'Validation error', errors: messages });
   }
+  res.status(400).json({ message: 'Error registering user', error: error.message });
+}
 });
 
 // Login

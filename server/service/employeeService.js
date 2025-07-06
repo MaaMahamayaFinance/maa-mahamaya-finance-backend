@@ -1,5 +1,5 @@
 const { getAllEmployees } = require("../repository/employeeRepository.js");
-const { createEmployeeIdCard, getEmployeeIdCardByEmail } = require("../repository/employeeRepository.js");
+const { createEmployeeIdCard, getEmployeeIdCardByEmail,getAllEmployeeIdCards  } = require("../repository/employeeRepository.js");
 
 async function getAllEmployeesService() {
     try {
@@ -31,4 +31,23 @@ const fetchEmployeeIdCard = async (email) => {
     return card;
 };
 
-module.exports = { createEmployeeIdCardService,getAllEmployeesService,fetchEmployeeIdCard };
+
+const getAllEmployeesWithCardStatus = async () => {
+    try {
+        const employees = await getAllEmployees();
+        const idCards = await getAllEmployeeIdCards(); // You'll create this in repo
+
+        const idCardEmailSet = new Set(idCards.map(card => card.email));
+
+        const enrichedEmployees = employees.map(emp => ({
+            ...emp._doc,
+            isIdCardCreated: idCardEmailSet.has(emp.email),
+        }));
+
+        return enrichedEmployees;
+    } catch (error) {
+        throw new Error("Service Error (card status): " + error.message);
+    }
+};
+
+module.exports = { createEmployeeIdCardService,getAllEmployeesService,fetchEmployeeIdCard, getAllEmployeesWithCardStatus };

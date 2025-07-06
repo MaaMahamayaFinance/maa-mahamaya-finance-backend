@@ -12,6 +12,18 @@ const employeeIdCardSchema = new mongoose.Schema({
         lowercase: true,
         trim: true
     },
+    role: {
+        type: String,
+        required: true,
+        lowercase: true,
+        trim: true
+    },
+    subRole: {
+        type: String,
+        required: true,
+        lowercase: true,
+        trim: true
+    },
     address: {
         type: String,
         required: true,
