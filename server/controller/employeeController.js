@@ -5,7 +5,6 @@ const {
 } = require("../service/employeeService");
 const User = require("../models/User");
 
-// ✅ Controller to get all employees with ID card status
 const getAllEmployeesController = async (req, res) => {
   try {
     const employees = await getAllEmployeesWithCardStatus(); // ⬅️ Updated service
@@ -24,7 +23,7 @@ const getAllEmployeesController = async (req, res) => {
 
 const createEmployeeIdCardController = async (req, res) => {
   try {
-    const { name, email, address, role, subRole, pincode, mobileNumber } = req.body;
+    const { profilePhoto, name, email, address, role, subRole, pincode, mobileNumber } = req.body;
 
     if (!name || !email || !address || !role || !subRole || !pincode || !mobileNumber) {
       return res.status(400).json({
@@ -34,6 +33,7 @@ const createEmployeeIdCardController = async (req, res) => {
     }
 
     const newCard = await createEmployeeIdCardService({
+      profilePhoto,
       name,
       email,
       address,

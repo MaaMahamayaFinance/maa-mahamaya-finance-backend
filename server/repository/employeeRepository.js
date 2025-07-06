@@ -5,7 +5,7 @@ async function getAllEmployees() {
     try {
         const employees = await User.find(
             { role: "employee" },
-            "_id name email role subRole address pincode mobileNumber"
+            "_id name email role subRole address pincode mobileNumber profilePhoto"
         );
         return employees;
     } catch (error) {

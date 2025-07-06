@@ -35,7 +35,7 @@ const fetchEmployeeIdCard = async (email) => {
 const getAllEmployeesWithCardStatus = async () => {
     try {
         const employees = await getAllEmployees();
-        const idCards = await getAllEmployeeIdCards(); // You'll create this in repo
+        const idCards = await getAllEmployeeIdCards();
 
         const idCardEmailSet = new Set(idCards.map(card => card.email));
 

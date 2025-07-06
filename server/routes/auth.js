@@ -72,27 +72,63 @@ router.post('/verify-otp', async (req, res) => {
 
 // Register
 router.post('/register', async (req, res) => {
-  const { name, email, password, role, subRole, address, pincode, mobileNumber, otp, extraSelection } = req.body;
+  const { 
+    name,
+    email,
+    password,
+    role,
+    subRole,
+    address,
+    pincode,
+    mobileNumber,
+    otp,
+    profilePhoto
+  } = req.body;
+
   if (role === 'admin') {
     return res.status(403).json({ message: 'Registration as admin is not allowed' });
   }
-  if (!name || !email || !password || !role || !subRole || !address || !pincode || !mobileNumber || !otp) {
+
+  if (!name || !email || !password || !role || !subRole || !address || !pincode || !mobileNumber || !otp || !profilePhoto ) {
     return res.status(400).json({ message: 'All fields including OTP are required' });
   }
+
   try {
     const record = await OTP.findOne({ email });
     if (!record) return res.status(400).json({ message: 'OTP not found or expired' });
+
     if (record.expiresAt < new Date()) {
       await OTP.deleteOne({ email });
       return res.status(400).json({ message: 'OTP expired' });
     }
+
     if (record.otp !== otp) return res.status(400).json({ message: 'Invalid OTP' });
     await OTP.deleteOne({ email });
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const userData = { name, email, password: hashedPassword, role, subRole, address, pincode, mobileNumber };
+
+    // ✅ include profilePhoto here
+    const userData = {
+      name,
+      email,
+      password: hashedPassword,
+      role,
+      subRole,
+      address,
+      pincode,
+      mobileNumber,
+      profilePhoto: profilePhoto || '',
+    };
+
     const user = new User(userData);
     const savedUser = await user.save();
-    const token = jwt.sign({ id: savedUser._id, role: savedUser.role, subRole:savedUser.subRole }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    const token = jwt.sign(
+      { id: savedUser._id, role: savedUser.role, subRole: savedUser.subRole },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
     res.status(201).json({
       token,
       user: {
@@ -104,17 +140,21 @@ router.post('/register', async (req, res) => {
         address: savedUser.address,
         pincode: savedUser.pincode,
         mobileNumber: savedUser.mobileNumber,
+        profilePhoto: savedUser.profilePhoto // ✅ return this
       }
     });
+
   } catch (error) {
-  console.error('Error saving user:', error);
-  if (error.name === 'ValidationError') {
-    const messages = Object.values(error.errors).map(val => val.message);
-    return res.status(400).json({ message: 'Validation error', errors: messages });
+    console.error('Error saving user:', error);
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(val => val.message);
+      return res.status(400).json({ message: 'Validation error', errors: messages });
+    }
+
+    res.status(400).json({ message: 'Error registering user', error: error.message });
   }
-  res.status(400).json({ message: 'Error registering user', error: error.message });
-}
 });
+
 
 // Login
 router.post('/login', async (req, res) => {

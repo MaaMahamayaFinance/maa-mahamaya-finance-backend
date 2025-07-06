@@ -31,26 +31,26 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Role is required'],
   },
   subRole: {
-  type: String,
-  enum: {
-    values: [
-      'softwareDeveloper',
-      'hr',
-      'sales',
-      'marketing',
-      'finance',
-      'retail',
-      'manufacturing',
-      'services',
-      'technology',
-      'healthcare',
-    ],
-    message: 'Invalid subRole',
+    type: String,
+    enum: {
+      values: [
+        'softwareDeveloper',
+        'hr',
+        'sales',
+        'marketing',
+        'finance',
+        'retail',
+        'manufacturing',
+        'services',
+        'technology',
+        'healthcare',
+      ],
+      message: 'Invalid subRole',
+    },
+    required: function () {
+      return this.role === 'employee' || this.role === 'business';
+    },
   },
-  required: function () {
-    return this.role === 'employee' || this.role === 'business';
-  },
-},
   address: {
     type: String,
     required: [true, 'Address is required'],
@@ -67,6 +67,13 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Mobile number is required'],
     match: [/^\d{12}$/, 'Mobile number must be a 10-digit number without country code'],
   },
+
+  // ✅ NEW FIELD for S3 image URL
+  profilePhoto: {
+    type: String,
+    default: '', // optional – can be empty initially
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,
@@ -74,4 +81,3 @@ const userSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('User', userSchema);
-
