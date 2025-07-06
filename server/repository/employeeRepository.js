@@ -5,7 +5,7 @@ async function getAllEmployees() {
     try {
         const employees = await User.find(
             { role: "employee" },
-            "_id name email role address pincode mobileNumber"
+            "_id name email role subRole address pincode mobileNumber"
         );
         return employees;
     } catch (error) {
@@ -30,6 +30,15 @@ const getEmployeeIdCardByEmail = async (email) => {
     return await EmployeeIdCard.findOne({ email });
 };
 
+const getAllEmployeeIdCards = async () => {
+    try {
+        return await EmployeeIdCard.find({}, "email");
+    } catch (error) {
+        console.error("Error fetching all ID cards:", error);
+        throw error;
+    }
+};
 
 
-module.exports = { createEmployeeIdCard, getAllEmployees,getEmployeeIdCardByEmail };
+
+module.exports = { createEmployeeIdCard, getAllEmployees,getEmployeeIdCardByEmail, getAllEmployeeIdCards };
