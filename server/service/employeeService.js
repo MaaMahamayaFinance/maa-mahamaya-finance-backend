@@ -1,5 +1,5 @@
-const { getAllEmployees } = require("../repository/employeeRepository.js");
-const { createEmployeeIdCard, getEmployeeIdCardByEmail,getAllEmployeeIdCards  } = require("../repository/employeeRepository.js");
+const { getAllEmployees, getEmployeeOfferLetterByEmail, getAllEmployeeOfferLetter } = require("../repository/employeeRepository.js");
+const { createEmployeeIdCard, getEmployeeIdCardByEmail,getAllEmployeeIdCards, createEmployeeOfferLetter } = require("../repository/employeeRepository.js");
 
 async function getAllEmployeesService() {
     try {
@@ -50,4 +50,47 @@ const getAllEmployeesWithCardStatus = async () => {
     }
 };
 
-module.exports = { createEmployeeIdCardService,getAllEmployeesService,fetchEmployeeIdCard, getAllEmployeesWithCardStatus };
+// Offer letter apis
+
+async function createEmployeeOfferLetterService(data) {
+    try {
+        const card = await createEmployeeOfferLetter(data);
+        return card;
+    } catch (error) {
+        throw new Error("Service Error: " + error.message);
+    }
+}
+
+
+
+
+const fetchEmployeeOfferLetter = async (email) => {
+    const card = await getEmployeeOfferLetterByEmail(email);
+    if (!card) {
+        throw new Error("Offer Letter not found");
+    }
+    return card;
+};
+
+
+// const getAllEmployeesWithOfferLetterStatus = async () => {
+//     try {
+//         const employees = await getAllEmployees();
+//         const offerLetter = await getAllEmployeeOfferLetter();
+
+//         const isOfferEmailSet = new Set(offerLetter.map(ol => ol.email));
+
+//         const enrichedEmployees = employees.map(emp => ({
+//             ...emp._doc,
+//             isOLCardCreated: isOfferEmailSet.has(emp.email),
+//         }));
+
+//         return enrichedEmployees;
+//     } catch (error) {
+//         throw new Error("Service Error (card status): " + error.message);
+//     }
+// };
+
+
+
+module.exports = { createEmployeeIdCardService,getAllEmployeesService,fetchEmployeeIdCard, getAllEmployeesWithCardStatus, createEmployeeOfferLetterService, fetchEmployeeOfferLetter };
