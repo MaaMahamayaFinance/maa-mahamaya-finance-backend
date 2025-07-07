@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const BusinessIdCard = require("../models/BusinessIdCard");
+const BusinessCertificate = require("../models/BusinessCertificate");
 
 async function getAllBusiness() {
     try {
@@ -41,4 +42,31 @@ const getAllBusinessIdCards = async () => {
 
 
 
-module.exports = { createBusinessIdCard, getAllBusiness, getBusinessIdCardByEmail, getAllBusinessIdCards };
+async function createBusinessCertificate(data) {
+    try {
+        const certificate = new BusinessCertificate(data);
+        return await certificate.save();
+    } catch (error) {
+        console.error("Error creating Business Certificate:", error);
+        throw error;
+    }
+}
+
+
+
+const getBusinessCertificateByEmail = async (email) => {
+    return await BusinessCertificate.findOne({ email });
+};
+
+const getAllBusinessCertificate = async () => {
+    try {
+        return await BusinessCertificate.find({}, "email");
+    } catch (error) {
+        console.error("Error fetching all Business Certificate:", error);
+        throw error;
+    }
+};
+
+
+
+module.exports = { createBusinessIdCard, getAllBusiness, getBusinessIdCardByEmail, getAllBusinessIdCards, createBusinessCertificate, getBusinessCertificateByEmail, getAllBusinessCertificate };
