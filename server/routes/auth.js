@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const OTP = require('../userOtp');
 const nodemailer = require('nodemailer');
+const Counter = require('../models/Counter');
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
@@ -72,7 +73,7 @@ router.post('/verify-otp', async (req, res) => {
 
 // Register
 router.post('/register', async (req, res) => {
-  const { 
+  const {
     name,
     email,
     password,
@@ -89,7 +90,7 @@ router.post('/register', async (req, res) => {
     return res.status(403).json({ message: 'Registration as admin is not allowed' });
   }
 
-  if (!name || !email || !password || !role || !subRole || !address || !pincode || !mobileNumber || !otp || !profilePhoto ) {
+  if (!name || !email || !password || !role || !subRole || !address || !pincode || !mobileNumber || !otp || !profilePhoto) {
     return res.status(400).json({ message: 'All fields including OTP are required' });
   }
 
@@ -107,7 +108,23 @@ router.post('/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ include profilePhoto here
+    // ✅ Generate role prefix
+    let prefix = '';
+    if (role === 'customer') prefix = 'CUS';
+    else if (role === 'employee') prefix = 'EMP';
+    else if (role === 'business') prefix = 'BUS';
+    else return res.status(400).json({ message: 'Invalid role for ID generation' });
+
+    // ✅ Find or create and increment counter for role
+    const counter = await Counter.findOneAndUpdate(
+      { role },
+      { $inc: { count: 1 } },
+      { new: true, upsert: true }
+    );
+
+    // ✅ Generate uniqueId
+    const uniqueId = `${prefix}${String(counter.count).padStart(4, '0')}`;
+
     const userData = {
       name,
       email,
@@ -118,6 +135,7 @@ router.post('/register', async (req, res) => {
       pincode,
       mobileNumber,
       profilePhoto: profilePhoto || '',
+      uniqueId, // ✅ Add to user
     };
 
     const user = new User(userData);
@@ -133,6 +151,7 @@ router.post('/register', async (req, res) => {
       token,
       user: {
         id: savedUser._id,
+        uniqueId: savedUser.uniqueId, // ✅ Return it
         name: savedUser.name,
         email: savedUser.email,
         role: savedUser.role,
@@ -140,7 +159,7 @@ router.post('/register', async (req, res) => {
         address: savedUser.address,
         pincode: savedUser.pincode,
         mobileNumber: savedUser.mobileNumber,
-        profilePhoto: savedUser.profilePhoto // ✅ return this
+        profilePhoto: savedUser.profilePhoto
       }
     });
 
