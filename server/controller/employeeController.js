@@ -9,7 +9,7 @@ const User = require("../models/User");
 
 const getAllEmployeesController = async (req, res) => {
   try {
-    const employees = await getAllEmployeesWithStatuses(); // ⬅️ Updated service
+    const employees = await getAllEmployeesWithStatuses();
     res.status(200).json({
       success: true,
       data: employees,
