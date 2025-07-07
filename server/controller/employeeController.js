@@ -1,7 +1,7 @@
 const {
   createEmployeeIdCardService,
   fetchEmployeeIdCard,
-  getAllEmployeesWithCardStatus,
+  getAllEmployeesWithStatuses,
   createEmployeeOfferLetterService,
   fetchEmployeeOfferLetter
 } = require("../service/employeeService");
@@ -9,7 +9,7 @@ const User = require("../models/User");
 
 const getAllEmployeesController = async (req, res) => {
   try {
-    const employees = await getAllEmployeesWithCardStatus(); // ⬅️ Updated service
+    const employees = await getAllEmployeesWithStatuses(); // ⬅️ Updated service
     res.status(200).json({
       success: true,
       data: employees,
@@ -96,23 +96,25 @@ const getMyEmployeeIdCard = async (req, res) => {
 
 const createEmployeeOfferLetterController = async (req, res) => {
   try {
-    const { _id, name, email, address, subRole, pincode, ctc } = req.body;
+    const { _id, name, uniqueId, email, address, subRole, pincode, ctc, joiningDate } = req.body;
 
-    if (!_id || !name || !email || !address || !subRole || !pincode || !ctc) {
+    if (!_id || !name || !uniqueId || !email || !address || !subRole || !pincode || !ctc || !joiningDate ) {
       return res.status(400).json({
         success: false,
-        message: "All fields (_id, name, email, address, subRole, pincode, ctc) are required.",
+        message: "All fields (_id, name, email, address, subRole, pincode, ctc, joiningDate) are required.",
       });
     }
 
     const newOL = await createEmployeeOfferLetterService({
       userId: _id,
       name,
+      uniqueId,
       email,
       address,
       subRole,
       pincode,
-      ctc
+      ctc,
+      joiningDate
     });
 
     res.status(201).json({

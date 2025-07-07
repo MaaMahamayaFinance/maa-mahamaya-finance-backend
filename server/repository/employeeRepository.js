@@ -33,7 +33,7 @@ const getEmployeeIdCardByEmail = async (email) => {
 
 const getAllEmployeeIdCards = async () => {
     try {
-        return await EmployeeIdCard.find({}, "email");
+        return await EmployeeIdCard.find({}, "email"); // ✅ fetch userId
     } catch (error) {
         console.error("Error fetching all ID cards:", error);
         throw error;
@@ -59,7 +59,7 @@ const getEmployeeOfferLetterByEmail = async (email) => {
 
 const getAllEmployeeOfferLetter = async () => {
     try {
-        return await EmployeeOfferLetter.find({}, "email");
+        return await EmployeeOfferLetter.find({}, "email"); // ✅ fetch userId
     } catch (error) {
         console.error("Error fetching all Offer Letter:", error);
         throw error;

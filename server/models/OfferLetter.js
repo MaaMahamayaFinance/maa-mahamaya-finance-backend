@@ -15,6 +15,14 @@ const offerLetterSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    joiningDate: {
+        type: Date,
+        required: true
+    },
+    uniqueId: {
+        type: String,
+        unique: true
+    },
     address: {
         type: String,
         required: true

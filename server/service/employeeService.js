@@ -32,23 +32,23 @@ const fetchEmployeeIdCard = async (email) => {
 };
 
 
-const getAllEmployeesWithCardStatus = async () => {
-    try {
-        const employees = await getAllEmployees();
-        const idCards = await getAllEmployeeIdCards();
+// const getAllEmployeesWithCardStatus = async () => {
+//     try {
+//         const employees = await getAllEmployees();
+//         const idCards = await getAllEmployeeIdCards();
 
-        const idCardEmailSet = new Set(idCards.map(card => card.email));
+//         const idCardEmailSet = new Set(idCards.map(card => card.email));
 
-        const enrichedEmployees = employees.map(emp => ({
-            ...emp._doc,
-            isIdCardCreated: idCardEmailSet.has(emp.email),
-        }));
+//         const enrichedEmployees = employees.map(emp => ({
+//             ...emp._doc,
+//             isIdCardCreated: idCardEmailSet.has(emp.email),
+//         }));
 
-        return enrichedEmployees;
-    } catch (error) {
-        throw new Error("Service Error (card status): " + error.message);
-    }
-};
+//         return enrichedEmployees;
+//     } catch (error) {
+//         throw new Error("Service Error (card status): " + error.message);
+//     }
+// };
 
 // Offer letter apis
 
@@ -93,4 +93,30 @@ const fetchEmployeeOfferLetter = async (email) => {
 
 
 
-module.exports = { createEmployeeIdCardService,getAllEmployeesService,fetchEmployeeIdCard, getAllEmployeesWithCardStatus, createEmployeeOfferLetterService, fetchEmployeeOfferLetter };
+
+const getAllEmployeesWithStatuses = async () => {
+    try {
+        const employees = await getAllEmployees(); // base data
+        const idCards = await getAllEmployeeIdCards(); // contains userId
+        const offerLetters = await getAllEmployeeOfferLetter(); // contains userId
+
+        const idCardSet = new Set(idCards.map(card => card.email.toString()));
+        const offerLetterSet = new Set(offerLetters.map(ol => ol.email.toString()));
+
+        const enrichedEmployees = employees.map(emp => ({
+        ...emp._doc,
+        isIdCardCreated: idCardSet.has(emp.email.toString()),
+        isOfferLetterCreated: offerLetterSet.has(emp.email.toString())
+        }));
+
+        return enrichedEmployees;
+    } catch (error) {
+        throw new Error("Service Error (status flags): " + error.message);
+    }
+};
+
+
+
+
+
+module.exports = { createEmployeeIdCardService,getAllEmployeesService,fetchEmployeeIdCard, createEmployeeOfferLetterService, fetchEmployeeOfferLetter, getAllEmployeesWithStatuses };
