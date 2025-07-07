@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const EmployeeIdCard = require("../models/EmployeeIdCard");
+const EmployeeOfferLetter = require("../models/OfferLetter")
 
 async function getAllEmployees() {
     try {
@@ -32,7 +33,7 @@ const getEmployeeIdCardByEmail = async (email) => {
 
 const getAllEmployeeIdCards = async () => {
     try {
-        return await EmployeeIdCard.find({}, "email");
+        return await EmployeeIdCard.find({}, "email"); // ✅ fetch userId
     } catch (error) {
         console.error("Error fetching all ID cards:", error);
         throw error;
@@ -40,5 +41,31 @@ const getAllEmployeeIdCards = async () => {
 };
 
 
+async function createEmployeeOfferLetter(data) {
+    try {
+        const offerLetter = new EmployeeOfferLetter(data);
+        return await offerLetter.save();
+    } catch (error) {
+        console.error("Error creating Employee Offer Letter:", error);
+        throw error;
+    }
+}
 
-module.exports = { createEmployeeIdCard, getAllEmployees,getEmployeeIdCardByEmail, getAllEmployeeIdCards };
+
+
+const getEmployeeOfferLetterByEmail = async (email) => {
+    return await EmployeeOfferLetter.findOne({ email });
+};
+
+const getAllEmployeeOfferLetter = async () => {
+    try {
+        return await EmployeeOfferLetter.find({}, "email"); // ✅ fetch userId
+    } catch (error) {
+        console.error("Error fetching all Offer Letter:", error);
+        throw error;
+    }
+};
+
+
+
+module.exports = { createEmployeeIdCard, getAllEmployees,getEmployeeIdCardByEmail, getAllEmployeeIdCards,createEmployeeOfferLetter, getEmployeeOfferLetterByEmail, getAllEmployeeOfferLetter };
