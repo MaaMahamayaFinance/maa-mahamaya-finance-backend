@@ -23,12 +23,12 @@ const getAllEmployeesController = async (req, res) => {
 
 const createEmployeeIdCardController = async (req, res) => {
   try {
-    const { profilePhoto, name, email, address, role, subRole, pincode, mobileNumber } = req.body;
+    const { profilePhoto, name, email, address, uniqueId, subRole, pincode, mobileNumber } = req.body;
 
-    if (!name || !email || !address || !role || !subRole || !pincode || !mobileNumber) {
+    if (!name || !email || !address || !uniqueId || !subRole || !pincode || !mobileNumber) {
       return res.status(400).json({
         success: false,
-        message: "All fields (name, email, address, role, subRole, pincode, mobileNumber) are required.",
+        message: "All fields (name, email, address, uniqueId, subRole, pincode, mobileNumber) are required.",
       });
     }
 
@@ -37,7 +37,7 @@ const createEmployeeIdCardController = async (req, res) => {
       name,
       email,
       address,
-      role,
+      uniqueId,
       subRole,
       pincode,
       mobileNumber,

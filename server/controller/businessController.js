@@ -23,9 +23,9 @@ const getAllBusinessController = async (req, res) => {
 
 const createBusinessIdCardController = async (req, res) => {
     try {
-        const { profilePhoto, name, email, address, role, subRole, pincode, mobileNumber } = req.body;
+        const { profilePhoto, name, email, address, uniqueId, subRole, pincode, mobileNumber } = req.body;
 
-        if (!name || !email || !address || !role || !subRole || !pincode || !mobileNumber) {
+        if (!name || !email || !address || !uniqueId || !subRole || !pincode || !mobileNumber) {
         return res.status(400).json({
             success: false,
             message: "All fields (name, email, address, role, subRole, pincode, mobileNumber) are required.",
@@ -37,7 +37,7 @@ const createBusinessIdCardController = async (req, res) => {
         name,
         email,
         address,
-        role,
+        uniqueId,
         subRole,
         pincode,
         mobileNumber

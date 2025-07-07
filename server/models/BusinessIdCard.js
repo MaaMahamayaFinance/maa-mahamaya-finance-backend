@@ -16,12 +16,6 @@ const businessIdCardSchema = new mongoose.Schema({
         lowercase: true,
         trim: true
     },
-    role: {
-        type: String,
-        required: true,
-        lowercase: true,
-        trim: true
-    },
     subRole: {
         type: String,
         required: true,
@@ -38,6 +32,10 @@ const businessIdCardSchema = new mongoose.Schema({
         required: true,
     },
     mobileNumber: {
+        type: String,
+        required: true,
+    },
+    uniqueId: {
         type: String,
         required: true,
     }

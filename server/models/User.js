@@ -73,6 +73,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '', // optional – can be empty initially
   },
+  uniqueId: {
+    type: String,
+    required: true,
+    unique: true
+  },
 
   createdAt: {
     type: Date,

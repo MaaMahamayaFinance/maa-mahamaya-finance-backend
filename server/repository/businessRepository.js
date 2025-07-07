@@ -5,7 +5,7 @@ async function getAllBusiness() {
     try {
         const business = await User.find(
             { role: "business" },
-            "_id name email role subRole address pincode mobileNumber profilePhoto"
+            "_id name email subRole address pincode mobileNumber profilePhoto uniqueId"
         );
         return business;
     } catch (error) {
