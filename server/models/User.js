@@ -25,8 +25,8 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: {
-      values: ['customer', 'business', 'employee', 'admin'],
-      message: 'Role must be customer, business, employee, or admin',
+      values: ['customer', 'business', 'employee', 'admin', 'intern'],
+      message: 'Role must be customer, business, employee, admin or intern',
     },
     required: [true, 'Role is required'],
   },
@@ -44,11 +44,12 @@ const userSchema = new mongoose.Schema({
         'services',
         'technology',
         'healthcare',
+        'customer'
       ],
       message: 'Invalid subRole',
     },
     required: function () {
-      return this.role === 'employee' || this.role === 'business';
+      return this.role === 'employee' || this.role === 'business' || this.role === 'intern';
     },
   },
   address: {

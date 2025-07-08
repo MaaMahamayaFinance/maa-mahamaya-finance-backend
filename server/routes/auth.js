@@ -112,6 +112,7 @@ router.post('/register', async (req, res) => {
     let prefix = '';
     if (role === 'customer') prefix = 'CUS';
     else if (role === 'employee') prefix = 'EMP';
+    else if (role === 'intern') prefix = 'INT';
     else if (role === 'business') prefix = 'BUS';
     else return res.status(400).json({ message: 'Invalid role for ID generation' });
 
