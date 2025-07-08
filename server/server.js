@@ -14,6 +14,7 @@ const queryRoutes = require('./routes/queries');
 const adminRoutes = require('./routes/admin');
 const employeeRoutes = require('./routes/employee.js');
 const businessRoutes = require('./routes/business.js');
+const internRoutes = require('./routes/intern.js');
 const uploadRoutes = require('./routes/uploadRoutes.js');
 
 const app = express(); 
@@ -72,8 +73,9 @@ app.use('/api/queries', queryRoutes);
 app.use('/api', adminRoutes);
 app.use('/api', employeeRoutes);
 app.use('/api', businessRoutes);
+app.use('/api', internRoutes);
 app.use('/api', uploadRoutes); 
 
-// ✅ Server start (Render-compatible)
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
