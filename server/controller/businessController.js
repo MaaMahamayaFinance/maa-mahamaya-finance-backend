@@ -23,6 +23,7 @@ const getAllBusinessController = async (req, res) => {
 };
 
 
+
 const createBusinessIdCardController = async (req, res) => {
     try {
         const { profilePhoto, name, email, address, uniqueId, subRole, pincode, mobileNumber } = req.body;
@@ -59,6 +60,8 @@ const createBusinessIdCardController = async (req, res) => {
         });
     }
 };
+
+
 
 const getMyBusinessIdCard = async (req, res) => {
     try {
