@@ -101,4 +101,26 @@ const getAllInternCertificate = async () => {
 
 
 
-module.exports = { getAllInterns, createInternIdCard, getInternIdCardByEmail, getAllInternIdCards, createInternOfferLetter, getInternOfferLetterByEmail, getAllInternOfferLetter, createInternCertificate, getInternCertificateByEmail, getAllInternCertificate }
+const findInternByUniqueId = async (uniqueId) => {
+    return await User.findOne({ role: 'intern', uniqueId });
+};
+
+
+
+
+const deleteInternById = async (uniqueId) => {
+    const deletedIntern = await User.findOneAndDelete({ role: 'intern', uniqueId });
+
+    if (!deletedIntern) return null;
+
+    await InternIdCard.deleteOne({ uniqueId });
+    await InternOfferLetter.deleteOne({ uniqueId });
+    await InternCertificate.deleteOne({ uniqueId });
+
+    return deletedIntern;
+
+};
+
+
+
+module.exports = { getAllInterns, createInternIdCard, getInternIdCardByEmail, getAllInternIdCards, createInternOfferLetter, getInternOfferLetterByEmail, getAllInternOfferLetter, createInternCertificate, getInternCertificateByEmail, getAllInternCertificate, findInternByUniqueId, deleteInternById }

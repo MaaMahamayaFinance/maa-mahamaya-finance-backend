@@ -1,5 +1,5 @@
 const { getAllEmployees, getEmployeeOfferLetterByEmail, getAllEmployeeOfferLetter } = require("../repository/employeeRepository.js");
-const { createEmployeeIdCard, getEmployeeIdCardByEmail,getAllEmployeeIdCards, createEmployeeOfferLetter } = require("../repository/employeeRepository.js");
+const { createEmployeeIdCard, getEmployeeIdCardByEmail,getAllEmployeeIdCards, createEmployeeOfferLetter, findEmployeeByUniqueId, deleteEmployeeById } = require("../repository/employeeRepository.js");
 
 async function getAllEmployeesService() {
     try {
@@ -119,4 +119,27 @@ const getAllEmployeesWithStatuses = async () => {
 
 
 
-module.exports = { createEmployeeIdCardService,getAllEmployeesService,fetchEmployeeIdCard, createEmployeeOfferLetterService, fetchEmployeeOfferLetter, getAllEmployeesWithStatuses };
+const getEmployeeByUniqueIdService = async (uniqueId) => {
+    return await findEmployeeByUniqueId(uniqueId);
+};
+
+
+
+
+const deleteEmployeeService = async (uniqueId) => {
+    const deletedEmployee = await deleteEmployeeById(uniqueId);
+
+    if (!deletedEmployee) {
+        const error = new Error('Employee not found or already deleted');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return deletedEmployee;
+};
+
+
+
+
+
+module.exports = { createEmployeeIdCardService,getAllEmployeesService,fetchEmployeeIdCard, createEmployeeOfferLetterService, fetchEmployeeOfferLetter, getAllEmployeesWithStatuses, getEmployeeByUniqueIdService, deleteEmployeeService };

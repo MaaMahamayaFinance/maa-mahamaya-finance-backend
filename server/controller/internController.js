@@ -1,4 +1,4 @@
-const { getAllInternsService, createInternIdCardService, fetchInternIdCard, createInternOfferLetterService, fetchInternOfferLetter, createInternCertificateService, fetchInternCertificate, getAllInternWithStatuses } = require("../service/internService");
+const { getAllInternsService, createInternIdCardService, fetchInternIdCard, createInternOfferLetterService, fetchInternOfferLetter, createInternCertificateService, fetchInternCertificate, getAllInternWithStatuses, getInternByUniqueIdService, deleteInternService } = require("../service/internService");
 const User = require("../models/User");
 
 
@@ -238,6 +238,49 @@ const getMyInternCertificate = async (req, res) => {
 
 
 
+
+
+const searchInternByUniqueIdController = async (req, res) => {
+    try {
+        const { uniqueId } = req.query;
+
+        if (!uniqueId) {
+        return res.status(400).json({ error: 'uniqueId is required' });
+        }
+
+        const intern = await getInternByUniqueIdService(uniqueId);
+
+        if (!intern) {
+        return res.status(404).json({ message: 'Intern not found' });
+        }
+
+        res.status(200).json(intern);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+
+const deleteInternController = async (req, res) => {
+    try {
+        const { uniqueId } = req.params;
+
+        const deleted = await deleteInternService(uniqueId);
+
+        res.status(200).json({
+        message: 'Intern deleted successfully',
+        intern: deleted,
+        });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({
+        message: error.message || 'Server error while deleting intern',
+        });
+    }
+};
+
+
+
 module.exports = {
     createInternIdCardController,
     getAllInternsController,
@@ -245,5 +288,7 @@ module.exports = {
     createInternOfferLetterController,
     getMyInternOfferLetter,
     createInternCertificateController,
-    getMyInternCertificate
+    getMyInternCertificate,
+    searchInternByUniqueIdController,
+    deleteInternController
 };

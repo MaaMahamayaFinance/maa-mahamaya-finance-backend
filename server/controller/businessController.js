@@ -3,7 +3,9 @@ const {
     fetchBusinessIdCard,
     getAllBusinessWithStatuses,
     createBusinessCertificateService,
-    fetchBusinessCertificate
+    fetchBusinessCertificate,
+    getBusinessByUniqueIdService,
+    deleteBusinessService
 } = require("../service/businessService");
 const User = require("../models/User");
 
@@ -175,11 +177,55 @@ const getMyBusinessCertificate = async (req, res) => {
 
 
 
+const searchBusinessByUniqueIdController = async (req, res) => {
+    try {
+        const { uniqueId } = req.query;
+
+        if (!uniqueId) {
+        return res.status(400).json({ error: 'uniqueId is required' });
+        }
+
+        const business = await getBusinessByUniqueIdService(uniqueId);
+
+        if (!business) {
+        return res.status(404).json({ message: 'Business not found' });
+        }
+
+        res.status(200).json(business);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+
+
+const deleteBusinessController = async (req, res) => {
+    try {
+        const { uniqueId } = req.params;
+
+        const deleted = await deleteBusinessService(uniqueId);
+
+        res.status(200).json({
+        message: 'Business deleted successfully',
+        intern: deleted,
+        });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({
+        message: error.message || 'Server error while deleting business',
+        });
+    }
+};
+
+
+
 
 module.exports = {
     createBusinessIdCardController,
     getAllBusinessController,
     getMyBusinessIdCard,
     createBusinessCertificateController,
-    getMyBusinessCertificate
+    getMyBusinessCertificate,
+    searchBusinessByUniqueIdController,
+    deleteBusinessController
 };

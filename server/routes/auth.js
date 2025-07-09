@@ -5,27 +5,15 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const OTP = require('../userOtp');
-const nodemailer = require('nodemailer');
 const Counter = require('../models/Counter');
+const sendOtpEmail = require('../utils/sendOtpEmail');
 
 // Nodemailer transporter setup
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
-async function sendOtpEmail(email, otp) {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: 'Your OTP for Maa Mahamaya Finance Registration',
-    text: `Your OTP code is: ${otp}. It will expire in 10 minutes.`,
-  };
-  await transporter.sendMail(mailOptions);
-}
+
+
+
+
 
 // Request OTP
 router.post('/request-otp', async (req, res) => {

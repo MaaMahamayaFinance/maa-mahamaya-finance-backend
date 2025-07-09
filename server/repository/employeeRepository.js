@@ -68,4 +68,23 @@ const getAllEmployeeOfferLetter = async () => {
 
 
 
-module.exports = { createEmployeeIdCard, getAllEmployees,getEmployeeIdCardByEmail, getAllEmployeeIdCards,createEmployeeOfferLetter, getEmployeeOfferLetterByEmail, getAllEmployeeOfferLetter };
+const findEmployeeByUniqueId = async (uniqueId) => {
+    return await User.findOne({ role: 'employee', uniqueId });
+};
+
+
+
+
+const deleteEmployeeById = async (uniqueId) => {
+    const deletedEmployee = await User.findOneAndDelete({ role: 'employee', uniqueId });
+    
+        if (!deletedEmployee) return null;
+    
+        await EmployeeIdCard.deleteOne({ uniqueId });
+        await EmployeeOfferLetter.deleteOne({ uniqueId });
+    
+        return deletedEmployee;
+};
+
+
+module.exports = { createEmployeeIdCard, getAllEmployees,getEmployeeIdCardByEmail, getAllEmployeeIdCards,createEmployeeOfferLetter, getEmployeeOfferLetterByEmail, getAllEmployeeOfferLetter,findEmployeeByUniqueId, deleteEmployeeById };

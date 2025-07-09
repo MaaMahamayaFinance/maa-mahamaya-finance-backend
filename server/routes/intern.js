@@ -9,7 +9,9 @@ const {
     createInternOfferLetterController,
     getMyInternOfferLetter,
     createInternCertificateController,
-    getMyInternCertificate
+    getMyInternCertificate,
+    searchInternByUniqueIdController,
+    deleteInternController
 } = require("../controller/internController");
 
 router.get("/getallinterns", getAllInternsController);
@@ -19,5 +21,7 @@ router.post("/createinternofferletter", createInternOfferLetterController);
 router.get("/internofferletter/me", authenticateUser, getMyInternOfferLetter);
 router.post("/createinterncertificate", createInternCertificateController);
 router.get("/interncertificate/me", authenticateUser, getMyInternCertificate);
+router.get('/searchintern', searchInternByUniqueIdController);
+router.delete('/interns/:uniqueId', deleteInternController);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { getAllInterns, createInternIdCard, getInternIdCardByEmail, getAllInternIdCards, createInternOfferLetter, getInternOfferLetterByEmail, getAllInternOfferLetter, createInternCertificate, getInternCertificateByEmail, getAllInternCertificate } = require("../repository/internRepository.js")
+const { getAllInterns, createInternIdCard, getInternIdCardByEmail, getAllInternIdCards, createInternOfferLetter, getInternOfferLetterByEmail, getAllInternOfferLetter, createInternCertificate, getInternCertificateByEmail, getAllInternCertificate, findInternByUniqueId, deleteInternById } = require("../repository/internRepository.js")
 
 
 
@@ -111,7 +111,28 @@ const getAllInternWithStatuses = async () => {
 
 
 
+const getInternByUniqueIdService = async (uniqueId) => {
+    return await findInternByUniqueId(uniqueId);
+};
 
 
 
-module.exports = { getAllInternsService, createInternIdCardService, fetchInternIdCard, createInternOfferLetterService, fetchInternOfferLetter, createInternCertificateService, fetchInternCertificate, getAllInternWithStatuses }
+
+const deleteInternService = async (uniqueId) => {
+    const deletedIntern = await deleteInternById(uniqueId);
+
+    if (!deletedIntern) {
+        const error = new Error('Intern not found or already deleted');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return deletedIntern;
+};
+
+
+
+
+
+
+module.exports = { getAllInternsService, createInternIdCardService, fetchInternIdCard, createInternOfferLetterService, fetchInternOfferLetter, createInternCertificateService, fetchInternCertificate, getAllInternWithStatuses, getInternByUniqueIdService, deleteInternService }

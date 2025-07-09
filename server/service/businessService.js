@@ -1,4 +1,4 @@
-const { getAllBusiness, createBusinessIdCard, getBusinessIdCardByEmail, getAllBusinessIdCards, getAllBusinessCertificate, createBusinessCertificate, getBusinessCertificateByEmail  } = require("../repository/businessRepository.js");
+const { getAllBusiness, createBusinessIdCard, getBusinessIdCardByEmail, getAllBusinessIdCards, getAllBusinessCertificate, createBusinessCertificate, getBusinessCertificateByEmail, findBusinessByUniqueId, deleteBusinessById } = require("../repository/businessRepository.js");
 
 async function getAllBusinessService() {
     try {
@@ -98,6 +98,25 @@ const getAllBusinessWithStatuses = async () => {
 
 
 
+const getBusinessByUniqueIdService = async (uniqueId) => {
+    return await findBusinessByUniqueId(uniqueId);
+};
 
 
-module.exports = { createBusinessIdCardService,getAllBusinessService,fetchBusinessIdCard, createBusinessCertificateService, fetchBusinessCertificate, getAllBusinessWithStatuses };
+
+
+const deleteBusinessService = async (uniqueId) => {
+    const deletedBusiness = await deleteBusinessById(uniqueId);
+
+    if (!deletedBusiness) {
+        const error = new Error('Business not found or already deleted');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return deletedBusiness;
+};
+
+
+
+module.exports = { createBusinessIdCardService,getAllBusinessService,fetchBusinessIdCard, createBusinessCertificateService, fetchBusinessCertificate, getAllBusinessWithStatuses, getBusinessByUniqueIdService, deleteBusinessService };

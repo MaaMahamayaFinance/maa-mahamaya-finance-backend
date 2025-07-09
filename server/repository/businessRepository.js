@@ -69,4 +69,25 @@ const getAllBusinessCertificate = async () => {
 
 
 
-module.exports = { createBusinessIdCard, getAllBusiness, getBusinessIdCardByEmail, getAllBusinessIdCards, createBusinessCertificate, getBusinessCertificateByEmail, getAllBusinessCertificate };
+const findBusinessByUniqueId = async (uniqueId) => {
+    return await User.findOne({ role: 'business', uniqueId });
+};
+
+
+
+const deleteBusinessById = async (uniqueId) => {
+    const deletedBusiness = await User.findOneAndDelete({ role: 'business', uniqueId });
+    
+        if (!deletedBusiness) return null;
+    
+        await BusinessIdCard.deleteOne({ uniqueId });
+        await BusinessCertificate.deleteOne({ uniqueId });
+    
+        return deletedBusiness;
+};
+
+
+
+
+
+module.exports = { createBusinessIdCard, getAllBusiness, getBusinessIdCardByEmail, getAllBusinessIdCards, createBusinessCertificate, getBusinessCertificateByEmail, getAllBusinessCertificate, findBusinessByUniqueId, deleteBusinessById };
