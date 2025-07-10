@@ -15,6 +15,7 @@ const adminRoutes = require('./routes/admin');
 const employeeRoutes = require('./routes/employee.js');
 const businessRoutes = require('./routes/business.js');
 const internRoutes = require('./routes/intern.js');
+const customerRoutes = require('./routes/customer.js');
 const uploadRoutes = require('./routes/uploadRoutes.js');
 
 const app = express(); 
@@ -74,6 +75,7 @@ app.use('/api', adminRoutes);
 app.use('/api', employeeRoutes);
 app.use('/api', businessRoutes);
 app.use('/api', internRoutes);
+app.use('/api', customerRoutes);
 app.use('/api', uploadRoutes); 
 
 
