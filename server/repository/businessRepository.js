@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const BusinessIdCard = require("../models/BusinessIdCard");
 const BusinessCertificate = require("../models/BusinessCertificate");
+const AadhaarPan = require('../models/AadhaarPan');
 
 async function getAllBusiness() {
     try {
@@ -89,5 +90,15 @@ const deleteBusinessById = async (uniqueId) => {
 
 
 
+const createAadhaarPan = async (data) => {
+    return await AadhaarPan.create(data);
+};
 
-module.exports = { createBusinessIdCard, getAllBusiness, getBusinessIdCardByEmail, getAllBusinessIdCards, createBusinessCertificate, getBusinessCertificateByEmail, getAllBusinessCertificate, findBusinessByUniqueId, deleteBusinessById };
+const findAadhaarPanByUserId = async (userId) => {
+    return await AadhaarPan.findOne({ userId });
+};
+
+
+
+
+module.exports = { createBusinessIdCard, getAllBusiness, getBusinessIdCardByEmail, getAllBusinessIdCards, createBusinessCertificate, getBusinessCertificateByEmail, getAllBusinessCertificate, findBusinessByUniqueId, deleteBusinessById, createAadhaarPan, findAadhaarPanByUserId };

@@ -1,4 +1,4 @@
-const { getAllBusiness, createBusinessIdCard, getBusinessIdCardByEmail, getAllBusinessIdCards, getAllBusinessCertificate, createBusinessCertificate, getBusinessCertificateByEmail, findBusinessByUniqueId, deleteBusinessById } = require("../repository/businessRepository.js");
+const { getAllBusiness, createBusinessIdCard, getBusinessIdCardByEmail, getAllBusinessIdCards, getAllBusinessCertificate, createBusinessCertificate, getBusinessCertificateByEmail, findBusinessByUniqueId, deleteBusinessById, findAadhaarPanByUserId, createAadhaarPan } = require("../repository/businessRepository.js");
 
 async function getAllBusinessService() {
     try {
@@ -119,4 +119,15 @@ const deleteBusinessService = async (uniqueId) => {
 
 
 
-module.exports = { createBusinessIdCardService,getAllBusinessService,fetchBusinessIdCard, createBusinessCertificateService, fetchBusinessCertificate, getAllBusinessWithStatuses, getBusinessByUniqueIdService, deleteBusinessService };
+
+const submitAadhaarPanDetailsService = async (data) => {
+    const existing = await findAadhaarPanByUserId(data.userId);
+    if (existing) {
+        throw new Error('Aadhaar and PAN details already submitted.');
+    }
+    return await createAadhaarPan(data);
+};
+
+
+
+module.exports = { createBusinessIdCardService,getAllBusinessService,fetchBusinessIdCard, createBusinessCertificateService, fetchBusinessCertificate, getAllBusinessWithStatuses, getBusinessByUniqueIdService, deleteBusinessService, submitAadhaarPanDetailsService };

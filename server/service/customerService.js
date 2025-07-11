@@ -1,4 +1,4 @@
-const { getBusinessesByPincode, getUserById } = require('../repository/customerRepository');
+const { getBusinessesByPincode, getUserById, findAadhaarPanByUserId, createAadhaarPan } = require('../repository/customerRepository');
 
 const findMatchingBusinessesService = async (userId, page, limit) => {
     const user = await getUserById(userId);
@@ -12,8 +12,21 @@ const findMatchingBusinessesService = async (userId, page, limit) => {
         totalPages: Math.ceil(total / limit),
         page
     };
-    };
+};
 
-    module.exports = {
+
+
+const submitAadhaarPanDetailsService = async (data) => {
+    const existing = await findAadhaarPanByUserId(data.userId);
+    if (existing) {
+        throw new Error('Aadhaar and PAN details already submitted.');
+    }
+    return await createAadhaarPan(data);
+};
+
+
+
+module.exports = {
     findMatchingBusinessesService,
+    submitAadhaarPanDetailsService
 };

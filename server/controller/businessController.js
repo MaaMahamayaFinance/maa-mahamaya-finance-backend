@@ -5,9 +5,12 @@ const {
     createBusinessCertificateService,
     fetchBusinessCertificate,
     getBusinessByUniqueIdService,
-    deleteBusinessService
+    deleteBusinessService,
+    submitAadhaarPanDetailsService
 } = require("../service/businessService");
 const User = require("../models/User");
+const { kycSchema } = require('../validators/kycValidator');
+
 
 const getAllBusinessController = async (req, res) => {
     try {
@@ -219,6 +222,31 @@ const deleteBusinessController = async (req, res) => {
 
 
 
+const submitAadhaarPanController = async (req, res) => {
+    try {
+
+        const parsedData = kycSchema.parse(req.body);
+
+        const result = await submitAadhaarPanDetailsService(parsedData);
+
+        res.status(201).json({
+            message: 'Details submitted successfully.',
+            data: result
+        });
+    } catch (err) {
+        if (err.name === 'ZodError') {
+            return res.status(400).json({
+                message: 'Validation failed.',
+                errors: err.errors
+            });
+        }
+
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
 
 module.exports = {
     createBusinessIdCardController,
@@ -227,5 +255,6 @@ module.exports = {
     createBusinessCertificateController,
     getMyBusinessCertificate,
     searchBusinessByUniqueIdController,
-    deleteBusinessController
+    deleteBusinessController,
+    submitAadhaarPanController
 };

@@ -1,3 +1,4 @@
+const AadhaarPan = require('../models/AadhaarPan');
 const User = require('../models/User');
 
 
@@ -19,7 +20,19 @@ const getBusinessesByPincode = async (pincode, page = 1, limit = 5) => {
     return { businesses, total };
     };
 
+
+    const createAadhaarPan = async (data) => {
+        return await AadhaarPan.create(data);
+    };
+    
+    const findAadhaarPanByUserId = async (userId) => {
+        return await AadhaarPan.findOne({ userId });
+    };
+    
+
     module.exports = {
     getUserById,
-    getBusinessesByPincode
+    getBusinessesByPincode,
+    createAadhaarPan,
+    findAadhaarPanByUserId
 };
