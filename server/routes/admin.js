@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const { getKYCDetailsController } = require('../controller/aadharPanController');
 
 const authorize = (roles) => (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
@@ -28,5 +29,9 @@ router.get('/users', authorize(['admin']), async (req, res) => {
     res.status(400).json({ message: 'Error fetching users', error });
   }
 });
+
+
+router.get('/admin/business/getkyc/:userId', getKYCDetailsController);
+router.get('/admin/customer/getkyc/:userId', getKYCDetailsController);
 
 module.exports = router;
